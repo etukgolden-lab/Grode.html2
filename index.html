@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GRODE — Learn to Code</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+<!-- SPLASH / LOGIN SCREEN -->
+<div id="splash-screen">
+  <div class="splash-bg"></div>
+  <div class="splash-particles" id="particles"></div>
+  <div class="splash-content">
+    <div class="splash-logo">
+      <span class="logo-g">G</span><span class="logo-rode">RODE</span>
+    </div>
+    <p class="splash-tagline">The Future of Learning to Code</p>
+    <div class="bot-figure" id="splash-bot">
+      <div class="bot-head">
+        <div class="bot-eyes"><div class="bot-eye"></div><div class="bot-eye"></div></div>
+        <div class="bot-mouth"></div>
+      </div>
+      <div class="bot-body"></div>
+      <div class="bot-arms"><div class="bot-arm left"></div><div class="bot-arm right"></div></div>
+    </div>
+    <div class="bot-speech" id="splash-speech">Hey! I'm Grode AI. Ready to make you a developer? 🚀</div>
+    <button class="google-btn" onclick="signIn()">
+      <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/><path fill="#FBBC05" d="M3.964 10.707c-.18-.54-.282-1.117-.282-1.707s.102-1.167.282-1.707V4.961H.957C.347 6.175 0 7.55 0 9s.347 2.825.957 4.039l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.961L3.964 7.293C4.672 5.166 6.656 3.58 9 3.58z"/></svg>
+      Continue with Google
+    </button>
+    <button class="guest-btn" onclick="enterAsGuest()">Continue as Guest</button>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app" class="hidden">
+
+  <!-- TOP NAV -->
+  <nav class="top-nav">
+    <div class="nav-logo">G<span>RODE</span></div>
+    <div class="nav-tabs">
+      <button class="nav-tab active" data-tab="learn" onclick="switchTab('learn',this)">Learn</button>
+      <button class="nav-tab" data-tab="projects" onclick="switchTab('projects',this)">Projects</button>
+      <button class="nav-tab" data-tab="notes" onclick="switchTab('notes',this)">Notes</button>
+      <button class="nav-tab" data-tab="analytics" onclick="switchTab('analytics',this)">Progress</button>
+      <button class="nav-tab" data-tab="control" onclick="switchTab('control',this)">Control Panel</button>
+    </div>
+    <div class="nav-right">
+      <div class="diamonds-pill">
+        <div class="diamond-gem"></div>
+        <span id="diamond-display">0</span>
+      </div>
+      <div class="xp-pill">XP <span id="xp-display">0</span></div>
+      <div class="user-avatar" id="user-avatar">G</div>
+    </div>
+  </nav>
+
+  <!-- LEARN TAB -->
+  <div id="tab-learn" class="tab-content active">
+    <div class="learn-layout">
+
+      <!-- LEFT: Curriculum Sidebar -->
+      <aside class="curriculum-sidebar">
+        <div class="sidebar-header">
+          <div class="sidebar-title">Curriculum</div>
+          <div class="sidebar-progress-ring">
+            <svg viewBox="0 0 36 36" width="44" height="44">
+              <circle cx="18" cy="18" r="15.9" fill="none" stroke="#2a1a4e" stroke-width="3"/>
+              <circle cx="18" cy="18" r="15.9" fill="none" stroke="#c084fc" stroke-width="3"
+                stroke-dasharray="8 92" stroke-linecap="round" transform="rotate(-90 18 18)" id="progress-ring"/>
+            </svg>
+            <span id="progress-pct-ring">8%</span>
+          </div>
+        </div>
+        <div class="curriculum-list" id="curriculum-list"></div>
+      </aside>
+
+      <!-- CENTER: Lesson Area -->
+      <main class="lesson-area" id="lesson-area">
+        <div class="lesson-topbar">
+          <div class="lesson-breadcrumb" id="lesson-breadcrumb">HTML Basics → Tags & Elements</div>
+          <div class="lesson-actions">
+            <button class="action-btn" onclick="toggleCCV()">⌨ CCV</button>
+            <button class="action-btn" onclick="openAI()">✦ Ask Grode</button>
+          </div>
+        </div>
+        <div class="lesson-content" id="lesson-content">
+          <!-- Injected by JS -->
+        </div>
+        <div class="lesson-nav-bar">
+          <button class="lesson-nav-btn back" onclick="prevLesson()">← Back</button>
+          <div class="lesson-nav-center">
+            <span id="lesson-counter">1 / 24</span>
+          </div>
+          <button class="lesson-nav-btn next" onclick="nextLesson()">Next →</button>
+        </div>
+      </main>
+
+      <!-- RIGHT: AI Companion + CCV -->
+      <aside class="right-panel">
+        <!-- AI Bot Companion -->
+        <div class="companion-card" id="companion-card">
+          <div class="companion-bot">
+            <div class="comp-bot-head">
+              <div class="comp-bot-eyes"><div class="comp-eye" id="eye-l"></div><div class="comp-eye" id="eye-r"></div></div>
+              <div class="comp-bot-mouth" id="bot-mouth"></div>
+              <div class="comp-bot-glow"></div>
+            </div>
+            <div class="comp-bot-body">
+              <div class="comp-body-light"></div>
+            </div>
+          </div>
+          <div class="companion-name">Grode AI</div>
+          <div class="companion-bubble" id="companion-bubble">
+            Welcome! I'm Grode AI — powered by Claude. I'll guide you through every lesson, quiz you, and review your projects. Let's go! 🔥
+          </div>
+          <button class="companion-ask-btn" onclick="openAI()">Ask me anything ↗</button>
+        </div>
+
+        <!-- Live CCV -->
+        <div class="ccv-panel hidden" id="ccv-panel">
+          <div class="ccv-header">
+            <span>Live Code View</span>
+            <div class="ccv-tabs">
+              <button class="ccv-tab active" onclick="setCCVLang('html',this)">HTML</button>
+              <button class="ccv-tab" onclick="setCCVLang('css',this)">CSS</button>
+              <button class="ccv-tab" onclick="setCCVLang('js',this)">JS</button>
+            </div>
+            <button class="ccv-close" onclick="toggleCCV()">✕</button>
+          </div>
+          <div class="ccv-split">
+            <textarea class="ccv-editor" id="ccv-editor" spellcheck="false" oninput="updatePreview()" placeholder="// Start coding here..."></textarea>
+            <iframe class="ccv-preview" id="ccv-preview" title="preview"></iframe>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <!-- PROJECTS TAB -->
+  <div id="tab-projects" class="tab-content hidden">
+    <div class="projects-layout">
+      <div class="projects-header">
+        <h2>Your Projects</h2>
+        <p>Complete projects to unlock the next module. Submit when ready.</p>
+      </div>
+      <div class="projects-grid" id="projects-grid"></div>
+    </div>
+  </div>
+
+  <!-- NOTES TAB -->
+  <div id="tab-notes" class="tab-content hidden">
+    <div class="notes-layout">
+      <div class="notes-sidebar">
+        <div class="notes-sidebar-header">
+          <span>My Notes</span>
+          <button onclick="newNote()">+ New</button>
+        </div>
+        <div class="notes-list" id="notes-list"></div>
+      </div>
+      <div class="notes-editor-area">
+        <input class="notes-title-input" id="note-title" placeholder="Note title..." />
+        <textarea class="notes-body" id="note-body" placeholder="Start writing your notes here...&#10;&#10;Tip: Use # for headings, * for bullets"></textarea>
+        <div class="notes-actions">
+          <button class="note-save-btn" onclick="saveNote()">Save Note</button>
+          <button class="note-ai-btn" onclick="summarizeNote()">✦ AI Summarize</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ANALYTICS TAB -->
+  <div id="tab-analytics" class="tab-content hidden">
+    <div class="analytics-layout">
+      <div class="analytics-header"><h2>Your Progress</h2></div>
+      <div class="analytics-cards">
+        <div class="stat-card"><div class="stat-value" id="stat-lessons">0</div><div class="stat-label">Lessons Done</div></div>
+        <div class="stat-card"><div class="stat-value" id="stat-streak">0🔥</div><div class="stat-label">Day Streak</div></div>
+        <div class="stat-card"><div class="stat-value" id="stat-diamonds-total">0</div><div class="stat-label">Diamonds</div></div>
+        <div class="stat-card"><div class="stat-value" id="stat-projects">0</div><div class="stat-label">Projects Done</div></div>
+      </div>
+      <div class="streak-chart">
+        <div class="streak-title">7-Day Activity</div>
+        <div class="streak-bars" id="streak-bars"></div>
+      </div>
+      <div class="module-progress-section">
+        <div class="module-prog-title">Module Progress</div>
+        <div id="module-progress-bars"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTROL PANEL TAB -->
+  <div id="tab-control" class="tab-content hidden">
+    <div class="control-layout">
+      <div class="control-header">
+        <h2>Control Panel</h2>
+        <p>Use commands or sliders to tweak GRODE's appearance and behaviour.</p>
+      </div>
+      <div class="control-grid">
+        <div class="control-card">
+          <div class="control-card-title">Command Console</div>
+          <p class="control-hint">Type <code>#change</code> or <code>#remove</code> commands below</p>
+          <textarea class="control-console" id="control-console" placeholder="#change background #0a0a0f&#10;#change accent #ff00ff&#10;#remove ccv&#10;#change font Courier New"></textarea>
+          <button class="control-apply-btn" onclick="applyControl()">Apply Commands</button>
+          <div class="control-output" id="control-output"></div>
+        </div>
+        <div class="control-card">
+          <div class="control-card-title">Theme Tweaker</div>
+          <div class="tweak-row"><label>Background</label><input type="color" id="tw-bg" value="#0a0a0f" oninput="applyTheme()"/></div>
+          <div class="tweak-row"><label>Accent</label><input type="color" id="tw-accent" value="#c084fc" oninput="applyTheme()"/></div>
+          <div class="tweak-row"><label>Gold</label><input type="color" id="tw-gold" value="#fbbf24" oninput="applyTheme()"/></div>
+          <div class="tweak-row"><label>Text</label><input type="color" id="tw-text" value="#f0e6ff" oninput="applyTheme()"/></div>
+          <div class="tweak-row"><label>Font Size</label><input type="range" min="12" max="20" value="14" oninput="document.documentElement.style.setProperty('--font-base', this.value+'px')"/></div>
+        </div>
+        <div class="control-card">
+          <div class="control-card-title">Feature Toggles</div>
+          <div class="toggle-row"><span>CCV Panel</span><label class="toggle"><input type="checkbox" checked onchange="toggleFeature('ccv',this)"/><span class="slider"></span></label></div>
+          <div class="toggle-row"><span>Bot Companion</span><label class="toggle"><input type="checkbox" checked onchange="toggleFeature('bot',this)"/><span class="slider"></span></label></div>
+          <div class="toggle-row"><span>Animations</span><label class="toggle"><input type="checkbox" checked onchange="toggleFeature('anim',this)"/><span class="slider"></span></label></div>
+          <div class="toggle-row"><span>Sound Effects</span><label class="toggle"><input type="checkbox" onchange="toggleFeature('sound',this)"/><span class="slider"></span></label></div>
+          <div class="toggle-row"><span>Particle BG</span><label class="toggle"><input type="checkbox" checked onchange="toggleFeature('particles',this)"/><span class="slider"></span></label></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI MODAL -->
+  <div class="ai-modal hidden" id="ai-modal">
+    <div class="ai-modal-inner">
+      <div class="ai-modal-header">
+        <div class="ai-modal-title">✦ Grode AI</div>
+        <button class="ai-modal-close" onclick="closeAI()">✕</button>
+      </div>
+      <div class="ai-chat-history" id="ai-chat-history"></div>
+      <div class="ai-input-row">
+        <input class="ai-input" id="ai-input" placeholder="Ask Grode AI anything about coding..." onkeydown="if(event.key==='Enter')sendAI()"/>
+        <button class="ai-send-btn" onclick="sendAI()">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- REWARD POP -->
+  <div class="reward-popup hidden" id="reward-popup">
+    <div class="reward-inner">
+      <div class="reward-gems">💎</div>
+      <div class="reward-title" id="reward-title">+10 Diamonds!</div>
+      <div class="reward-sub" id="reward-sub">Lesson Complete</div>
+    </div>
+  </div>
+
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
